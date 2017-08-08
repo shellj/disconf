@@ -21,6 +21,10 @@ import com.baidu.disconf.client.support.registry.Registry;
 import com.baidu.disconf.client.watch.WatchMgr;
 import com.baidu.disconf.core.common.constants.DisConfigTypeEnum;
 import com.baidu.disconf.core.common.utils.GsonUtils;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.MapPropertySource;
+import org.springframework.core.env.MutablePropertySources;
 
 /**
  * 配置文件处理器实现
@@ -124,6 +128,10 @@ public class DisconfFileCoreProcessorImpl implements DisconfCoreProcessor {
         try {
             dataMap = FileTypeProcessorUtils.getKvMap(disconfCenterFile.getSupportFileTypeEnum(),
                     disconfCenterFile.getFilePath());
+            ConfigurableEnvironment environment = registry.getFirstByType(ConfigurableEnvironment.class, false);
+            MutablePropertySources propertySources = environment.getPropertySources();
+            propertySources.addFirst(new MapPropertySource("disconf:[" + fileName + "]", dataMap));
+            LOGGER.info("Load disconf properties [{}] to spring context", fileName);
         } catch (Exception e) {
             LOGGER.error("cannot get kv data for " + filePath, e);
         }

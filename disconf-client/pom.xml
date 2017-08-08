@@ -333,5 +333,11 @@
             </build>
         </profile>
     </profiles>
-
+    <distributionManagement>
+        <repository>
+            <id>my-maven-repository</id>
+            <name>Internal Repository</name>
+            <url>file:///${project.basedir}/../mvn-repos/releases</url>
+        </repository>
+    </distributionManagement>
 </project>
